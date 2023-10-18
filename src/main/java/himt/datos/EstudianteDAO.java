@@ -122,6 +122,28 @@ public class EstudianteDAO {
         return false;
     }
 
+    public boolean eliminarEstudiante(Estudiante estudiante){
+        PreparedStatement ps;
+        Connection con = getConexion();
+        String sql = "DELETE FROM estudiante WHERE id_estudiante = ? ";
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, estudiante.getIdEstudiante());
+            ps.execute();
+            return true;
+        }catch (Exception e){
+            System.out.println("Error al eliminar estudiante: " + e.getMessage());
+        }
+        finally {
+            try{
+                con.close();
+            }catch (Exception e){
+                System.out.println("Error al cerrar conexión: " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         var estudoanteDao = new EstudianteDAO();
 
@@ -134,17 +156,25 @@ public class EstudianteDAO {
             System.out.println("No se agregó el estudiante " + nuevoEstudiante);*/
 
         //Modificamos un estudiante existente (1)
-        var estudianteModificar = new Estudiante(1, "Juan Carlos", "Juarez", "8798898", "juan@mail.com");
+        /*var estudianteModificar = new Estudiante(1, "Juan Carlos", "Juarez", "8798898", "juan@mail.com");
         var modificado = estudoanteDao.modificarEstudiante(estudianteModificar);
         if (modificado)
             System.out.println("Estudiante modificado: " + estudianteModificar);
         else
-            System.out.println("No se modificó estudiante: " + estudianteModificar);
+            System.out.println("No se modificó estudiante: " + estudianteModificar);*/
+
+        // Eliminar estudiante (3)
+        /*var estudianteEliminar = new Estudiante(3);
+        var eliminado = estudoanteDao.eliminarEstudiante(estudianteEliminar);
+        if (eliminado)
+            System.out.println("Estudiante eliminado: " + estudianteEliminar);
+        else
+            System.out.println("No se eliminó el estudiante: " + estudianteEliminar);*/
 
         // Listar estudiantes
-        System.out.println("Listado estudiantes: ");
+       /* System.out.println("Listado estudiantes: ");
         List<Estudiante> estudiantes = estudoanteDao.listarEstudiantes();
-        estudiantes.forEach(System.out::println);
+        estudiantes.forEach(System.out::println);*/
 
         //Buscar por Id
        /* var estudiante1 = new Estudiante(1);
