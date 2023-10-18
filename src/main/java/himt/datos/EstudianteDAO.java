@@ -46,7 +46,7 @@ public class EstudianteDAO {
         PreparedStatement ps;
         ResultSet rs;
         Connection con = getConexion();
-        String sql = "SELECT * FROm estudiante WHERE id_estudiante = ? ";
+        String sql = "SELECT * FROM estudiante WHERE id_estudiante = ? ";
         try {
             ps = con.prepareStatement(sql);
             ps.setInt(1, estudiante.getIdEstudiante());
@@ -71,15 +71,51 @@ public class EstudianteDAO {
         return false;
     }
 
+    public boolean agregarEstudiante(Estudiante estudiante){
+        PreparedStatement ps;
+        Connection con = getConexion();
+        String sql = "INSERT INTO estudiante(nombre, apellido, telefono, email) " +
+                "VALUES(?, ?, ?, ?)";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, estudiante.getNombre());
+            ps.setString(2, estudiante.getApellido());
+            ps.setString(3, estudiante.getTelefono());
+            ps.setString(4, estudiante.getEmail());
+            ps.execute();
+            return true;
+        }catch (Exception e){
+            System.out.println("Error al agregar estudiante: " + e.getMessage());
+        }
+        finally {
+            try{
+                con.close();
+            } catch (Exception e){
+                System.out.println("Error al cerrar conexión: " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         var estudoanteDao = new EstudianteDAO();
+
+        // Agregar estudiante
+        var nuevoEstudiante = new Estudiante("Carlos","Lara","5464567887","carlos@mail.com");
+        var agregado = estudoanteDao.agregarEstudiante(nuevoEstudiante);
+        if(agregado)
+            System.out.println("Estudiante agregado: " + nuevoEstudiante);
+        else
+            System.out.println("No se agregó el estudiante " + nuevoEstudiante);
+
+
         // Listar estudiantes
-        //System.out.println("Listado estudiantes: ");
+        System.out.println("Listado estudiantes: ");
         List<Estudiante> estudiantes = estudoanteDao.listarEstudiantes();
-        //estudiantes.forEach(System.out::println);
+        estudiantes.forEach(System.out::println);
 
         //Buscar por Id
-        var estudiante1 = new Estudiante(1);
+       /* var estudiante1 = new Estudiante(1);
         System.out.println("Estudiante antes de la busqueda: "+ estudiante1);
         var encontrado = estudoanteDao.buscarEstudiantePorId(estudiante1);
         if(encontrado){
@@ -87,6 +123,6 @@ public class EstudianteDAO {
         }
         else{
             System.out.println("No se encontró estudiante: " + estudiante1.getIdEstudiante());
-        }
+        }*/
     }
 }
